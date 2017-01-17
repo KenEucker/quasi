@@ -1,0 +1,47 @@
+{
+  "name": "quasi",
+  "version": "0.0.9-alpha",
+  "description": "",
+  "author": "Ken Eucker <keneucker@gmail.com>",
+  "contributors": [],
+  "bin": {},
+  "scripts": {},
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KenEucker/quasi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KenEucker/quasi/issues"
+  },
+  "keywords": [],
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "chalk": "^1.1.3",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "lodash": "^4.17.2",    
+    "nodemailer": "^2.7.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth-jwt": "^0.2.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "files": [
+    "LICENSE",
+    "History.md",
+    "README.md",
+    "quasi.js",
+    "index.js",
+    "assets",
+    "config",
+    "content",
+    "templates",
+    "vendor"
+  ],
+  "license": "Unlicense"
+}
