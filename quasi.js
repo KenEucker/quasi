@@ -23,6 +23,8 @@ var /* * Libraries * */
     GoogleOauthJWTStrategy = require('passport-google-oauth-jwt').GoogleOauthJWTStrategy,
     /// Simple session middleware for express
     session = require('express-session'),
+    /// For serving a favicon
+    favicon = require('serve-favicon'),
     
     /* * Application Data * */
     config = require("./config"),
@@ -252,6 +254,11 @@ function configureQuasiApp() {
                 serveFile(route.route, req, res);
             });   
             type = "static";
+        }
+        // If this is a special route of type favicon
+        else if(route.favicon === true) {
+            app.use(favicon(__dirname + route.content));
+            type = "favicon";
         }
         // If the user must be authenticated for this route
         else if(route.protected === true) {
