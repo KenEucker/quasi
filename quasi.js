@@ -1,7 +1,5 @@
 'use strict';
 
-const PORT = process.env.PORT ? process.env.PORT : 8080; 
-
 var /* * Libraries * */
     /// Powers our app 
     express = require('express'),
@@ -308,7 +306,12 @@ function configureQuasiApp() {
 }
 
 function run(port) {
-    if(!port) port = PORT;
+    if(process.env.PORT) {
+        port = process.env.PORT;
+    }
+    else if(!port) {
+        port = 8080;
+    }
 
     // Start the app and give success message
     app.listen(port, function () {
