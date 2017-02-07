@@ -4,5 +4,6 @@ window.page.directive = {
     "#sitename span": "name",
     "#description span": "description",
     "#license span": "license",
+    "#code@href": "repository.url",
     "#bugs@href": "bugs.url",
 }
