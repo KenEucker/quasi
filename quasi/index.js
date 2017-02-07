@@ -35,7 +35,7 @@ function configureQuasiApp() {
     // Turn on pretty formatted errors
     app.locals.pretty = true;
 
-    authentication.initialize(configuration, passport);
+    app.use(authentication.initialize(configuration, passport));
     app.use(bodyparser.json());
     app.use(passport.initialize());
     app.use(passport.session());

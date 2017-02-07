@@ -79,6 +79,8 @@ function initialize(configuration, passport) {
                 res.redirect(redirectTo);
         });
     });
+
+    return router;
 }
 
 module.exports = {
