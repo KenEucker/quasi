@@ -24,7 +24,7 @@
       "route": "/version",
       "template": "version",
       "page": "",
-      "content": "/content/../package.json",
+      "content": "../package.json",
       "protected": false
     },
     {
