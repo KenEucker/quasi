@@ -1,5 +1,5 @@
 # Framework
-QUASI framework - an express based framework intended to provide all of the features you would need to run a simple webserver from simple configuration files that inform the app how it should serve your html pages, using a DOM structure based templating engine that enables developers to create their templates without a tightly coupled content management system.
+QUASI framework - an express based framework intended to provide all of the features you would need to run a simple webserver from simple configuration files that inform the app how it should serve your html pages, using a DOM structure based templating engine that enables developers to create their templates without a tightly coupled content management system. 
 
 ## QUASI configuration
 The QUASI framework uses three configuration files for it's simple setup:
@@ -51,17 +51,30 @@ The QUASI framework uses three configuration files for it's simple setup:
 Themes can be developed statically, as the paths are translated between served and unserved content.
 The flow for developing a theme is to add a few items, including the templating, to get started.
 
+The vendor folder is for global libraries that can be modified from their original source or node_module middleware (minified versions are expected to be original source)
+
 ## Using PUREjs templating with the files in the /templates folder
-The idea is that you can develop a theme without any of the server tech running with a text editor and verify your work by opening your html files in the browser. 
+The idea is that you can develop a theme without any of the server tech running with a text editor and verify your work by opening your html files in the browser. To do so the following points are expectations of template development.
 \* This assumes that there are no external resources required for your templates.
-* There is a vendor folder in the root for sitewide libraries that encourage the use of supported libraries that would be maintained and updated independently
-* Other libraries that are more specific to smaller aspects of a template can remain in that template's folder
+* Libraries that are more specific to smaller aspects of a template remain in that template's folder
 * Static assets that are only used for a specific template may remain in that template's folder. Templates using static assets only specific to that template are expected to use a relative path specific to that template's folder structure.
-* Assets that are specific to site content would go into the /assets folder to be used between different templates. Assets that are used between templates are expected to use a path that goes the required levels out of the /templates folder 
+* Assets that are specific to site content would go into the /assets folder to be used between different templates. These assets are expected to use a path that goes the required levels out of the /templates folder (../../assets)
 
 # Vendors that make this project possible
 * purejs (w/jquery)
 * express
 * passport
 * foundation
+* nodemailer
+
+# Roadmap
+## 1.0.0
+### Features 
+* common OAUTH2 integrations using javascript web tokens
+* route generation and script loading
+* everything's a json object (EJO) Editor
+* webpack integration
+* remoteStorage integration
+* Google Chrome extension
+* express generator starter project (CLI?)
 

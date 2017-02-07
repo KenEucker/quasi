@@ -1,6 +1,6 @@
 {
   "name": "quasi",
-  "version": "0.0.9-alpha",
+  "version": "0.1.0-refactor",
   "description": "QUASI framework - an express based framework intended to provide all of the features you would need to run a simple webserver from simple configuration files that inform the app how it should serve your html pages, using a DOM structure based templating engine that enables developers to create their templates without a tightly coupled content management system.",
   "author": "Ken Eucker <keneucker@gmail.com>",
   "contributors": [],
