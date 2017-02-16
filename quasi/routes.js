@@ -76,6 +76,7 @@ function modifyPage(html, window_page_content) {
         }
     });
 
+    
     // Remove the sample content for the template if it exists (REMNANT)
     html = html.replace('<script src="./sample.js"></script>', '');
 
@@ -95,7 +96,7 @@ function servePage(route, req, res) {
 
     var page = route.page != "" ? route.page : "index.html",
         html = path.join(__dirname, outputFolder, 'templates/', route.template, '/', page), 
-        contentPath = path.join(__dirname, route.content),
+        contentPath = path.join(__dirname, outputFolder, route.content),
         content;
 
     /// TODO: add serverside PUREjs templating for the <head> of the document
@@ -112,6 +113,7 @@ function servePage(route, req, res) {
 
     try {
         // Get the page data to use in templating
+        console.log(contentPath);
         content = fs.readFileSync(contentPath, "utf8");
     } catch(e) {
         logger.logError('Error reading content for template at ' + contentPath + ': ' + e);
