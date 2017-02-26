@@ -4,7 +4,11 @@ var gulp = require('gulp'),
     minifyCSS = require('gulp-csso'),
     through = require('through2'),
     jsonTransform = require('gulp-json-transform'),
-    rename = require("gulp-rename");
+    rename = require("gulp-rename"),
+    logger = require('../middleware/logger/'),
+    path = require('path'),
+    inputFolder = path.join(__dirname + '/../', 'bin/'),
+    outputFolder = path.join(__dirname + '/../', 'build/');
 
 // Inserts a string into another string before the single occurance where
 function insertBefore(what, where, insert) {
@@ -48,7 +52,7 @@ function string_src(filename, string) {
 }
 
 gulp.task('transpile-html', function() {
-  gulp.src('bin/code/html/*.json')
+  gulp.src(inputFolder + 'code/html/*.json')
         .pipe(jsonTransform(function(data, file) {
           /// Consider changing the way that html is piped using this information and calling .pipe(change()) initially for the code
             let htmlFile = data.code, 
@@ -70,11 +74,11 @@ gulp.task('transpile-html', function() {
         }))
         /// TODO: add .pipe(inject()) here
         //.pipe(inject())
-        .pipe(gulp.dest('build/public/'))
+        .pipe(gulp.dest(outputFolder + '/public/'))
 });
 
 gulp.task('transpile-javascript', function() {
-  gulp.src('bin/code/javascript/*.json')
+  gulp.src(inputFolder + 'code/javascript/*.json')
         .pipe(jsonTransform(function(data, file) {            
             return data.code;
         }))
@@ -88,15 +92,16 @@ gulp.task('transpile-javascript', function() {
           newPath = newPath.replace(/#/g, "."); 
           filename = filename.replace(/#/g, "."); 
 
+
           path.dirname = newPath;
           path.basename = filename;
           path.extname = ".js"
         }))
-        .pipe(gulp.dest('build/public/'))
+        .pipe(gulp.dest(outputFolder + 'public/'))
 });
 
 gulp.task('transpile-css', function() {
-  gulp.src('bin/code/css/*.json')
+  gulp.src(inputFolder + 'code/css/*.json')
         .pipe(jsonTransform(function(data, file) {            
             return data.code;
         }))
@@ -114,7 +119,7 @@ gulp.task('transpile-css', function() {
           path.basename = filename;
           path.extname = ".css"
         }))
-        .pipe(gulp.dest('build/public/'))
+        .pipe(gulp.dest(outputFolder + 'public/'))
 });
 
 /// TODO: THIS IS OUR APP PIPELINE, put this flow into the build process of QUASI
