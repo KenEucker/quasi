@@ -18,7 +18,7 @@ var express = require('express'),
 
 /// Serves template files and files from the static routes
 function servePageOrFile(req, res) {
-    logger.logNotice("page or file requested: " + req.url);
+    logger.logNotice("incoming request: " + req.url);
     var lastSlashLocation = (req.url.indexOf('?') == -1) ? req.url.length -1 : req.url.indexOf('?') - 1;
 
     if(req.url[lastSlashLocation] != '/') {
@@ -92,7 +92,7 @@ function modifyPage(html, window_page_content) {
 }
 
 function servePage(route, req, res) {
-    logger.logSuccess('route matched page: ' + route.route);
+    logger.logSuccess('route matched: ' + route.route);
 
     var page = route.document != "" ? route.document : "index",
         html = path.join(__dirname, outputFolder, 'views/', route.template, '/', page + '.' + route.interpreter), 
@@ -114,7 +114,7 @@ function servePage(route, req, res) {
 
     try {
         // Get the page data to use in templating
-        logger.logNotice("getting content: " + contentPath);
+        logger.logNotice("content: " + contentPath);
         content = fs.readFileSync(contentPath, "utf8");
     } catch(e) {
         logger.logError('Error reading content for template at ' + contentPath + ': ' + e);
@@ -130,9 +130,17 @@ function servePage(route, req, res) {
 }
 
 function serveFile(route, req, res) {        
-    logger.logNotice("static file requested: " + route + req.url);
-    var file = req.url = (req.url.indexOf('?') != -1) ? req.url.substring(0, req.url.indexOf('?')) : req.url;
-    res.sendFile(path.join(__dirname, outputFolder, route, req.url));
+    var file = (req.url.indexOf('?') != -1) ? req.url.substring(0, req.url.indexOf('?')) : req.url;
+    res.sendFile(path.join(__dirname, outputFolder, route, file), {  }, function(err) {
+        if(err) {
+            logger.logError("static file not found: " + route + req.url);
+            res.status(404).send('File not found');
+            res.end();
+        }
+        else {
+            logger.logSuccess("serving static file: " + route + req.url);
+        }
+    });
 }
 
 function backupFile(target) {
@@ -200,7 +208,7 @@ function initialize(configuration)
         // If this is a special route of type favicon
         else if(route.favicon === true) {
             try {
-                router.use(favicon(__dirname + route.content)); 
+                router.use(favicon(path.join(__dirname, outputFolder, route.content))); 
                 type = "favicon";
             }
             catch(e) { 

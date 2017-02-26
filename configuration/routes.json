@@ -43,7 +43,7 @@
       "static": true
     },
     {
-      "content": "/build/public/img/favicon.ico",
+      "content": "/img/favicon.ico",
       "favicon": true
     }
 ]
