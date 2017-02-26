@@ -12,13 +12,13 @@ var express = require('express'),
     logger = require('../middleware/logger/'),
     /// For sending emails
     mailer = require('../middleware/nodemailer/'),
-    outputFolder = "../bin/",
+    outputFolder = "../build/public/",
     config = {},
     routeKeys = [];
 
 /// Serves template files and files from the static routes
 function servePageOrFile(req, res) {
-    // DEBUG console.log(chalk.yellow('receiving ' + req.url));
+    logger.logNotice("page or file requested: " + req.url);
     var lastSlashLocation = (req.url.indexOf('?') == -1) ? req.url.length -1 : req.url.indexOf('?') - 1;
 
     if(req.url[lastSlashLocation] != '/') {
@@ -81,7 +81,7 @@ function modifyPage(html, window_page_content) {
     html = html.replace('<script src="./sample.js"></script>', '');
 
     // Insert the page content to be used for PUREjs
-    html = insertBefore(html, '</body>', '<script>window.page.content=' + window_page_content + ';</script>');
+    html = insertBefore(html, '</body>', '<script>window.page.content=' + window_page_content + '; $(document).foundation();</script>');
 
     html = insertAfter(html, "<head", headStartScripts, '>');
     html = insertBefore(html, "</head>", headEndScripts);
@@ -94,13 +94,14 @@ function modifyPage(html, window_page_content) {
 function servePage(route, req, res) {
     logger.logSuccess('route matched page: ' + route.route);
 
-    var page = route.page != "" ? route.page : "index.html",
-        html = path.join(__dirname, outputFolder, 'templates/', route.template, '/', page), 
-        contentPath = path.join(__dirname, outputFolder, route.content),
+    var page = route.document != "" ? route.document : "index",
+        html = path.join(__dirname, outputFolder, 'views/', route.template, '/', page + '.' + route.interpreter), 
+        /// TODO: use dependency injection for the grabbing of front-end content 
+        contentPath = path.join(__dirname, '../bin/', route.content),
         content;
 
     /// TODO: add serverside PUREjs templating for the <head> of the document
-    /// TODO: Cachebusting - append the version of the app to the resource tags (css,js)
+    /// TODO: Cachebusting - append the version of the app to the resource tags (css,js) WEBPACK
 
     try {
         // Get the html template
@@ -113,7 +114,7 @@ function servePage(route, req, res) {
 
     try {
         // Get the page data to use in templating
-        console.log(contentPath);
+        logger.logNotice("getting content: " + contentPath);
         content = fs.readFileSync(contentPath, "utf8");
     } catch(e) {
         logger.logError('Error reading content for template at ' + contentPath + ': ' + e);
@@ -129,7 +130,7 @@ function servePage(route, req, res) {
 }
 
 function serveFile(route, req, res) {        
-    /// DEBUG: logger.logNotice("static file requested: " + route + req.url);
+    logger.logNotice("static file requested: " + route + req.url);
     var file = req.url = (req.url.indexOf('?') != -1) ? req.url.substring(0, req.url.indexOf('?')) : req.url;
     res.sendFile(path.join(__dirname, outputFolder, route, req.url));
 }
@@ -143,7 +144,7 @@ function backupFile(target) {
         backup = target + "." + datestamp + "." + extension;
     
     try{
-        fs.writeFileSync(backup, fs.readFileSync(target));
+        fs.writeFileSync(backup, fs.readFileSync(outputFolder + target));
     }
     catch(exceptiom) {
         
@@ -213,7 +214,7 @@ function initialize(configuration)
             router.get(route.route, ensureAuthenticated, servePageOrFile); 
             // Include the template folder
             router.use(route.route, ensureAuthenticated, function(req, res) {
-                serveFile('templates/' + route.template, req, res);
+                serveFile('views/' + route.template, req, res);
             }); 
             type += "-protected";
         }
@@ -222,7 +223,7 @@ function initialize(configuration)
             router.get(route.route, servePageOrFile); 
             // Include the template folder as static route
             router.use(route.route, function(req, res) {
-                serveFile('templates/' + route.template, req, res);
+                serveFile('views/' + route.template, req, res);
             }); 
         }
         logger.logInfo("Configured " + type + " route: " + route.route);
@@ -230,13 +231,17 @@ function initialize(configuration)
 
     // Set default route to the first site as well
     router.get('*', function(req, res) {
-        res.redirect(routeKeys[0] + '/');
+        let redirect = routeKeys[0] + '/';
+        logger.logUpdate('[' + req.url + '] route fallthrough, redirecting to landing page at route: ' + redirect);        
+        res.redirect(redirect);
     });
 
     // Use the first route as the landing for the site
     router.get("", function(req, res) {
+        let redirect = routeKeys[0] + '/';
         res.write("play");
-        res.redirect(routeKeys[0] + '/');
+        logger.logUpdate('[' + req.url + '] root requested, redirecting to landing page at route: ' + redirect);
+        res.redirect(redirect);
     });
 
     return router;

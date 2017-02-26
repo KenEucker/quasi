@@ -2,30 +2,37 @@
     {
       "route": "/hello-world",
       "template": "foundation",
-      "page": "agency.html",
+      "interpreter": "html",
+      "document": "agency",
       "content": "content/hello/hello.json",
       "protected": false
     },
     {
       "route": "/hello",
       "template": "foundation",
-      "page": "blog.html",
+      "interpreter": "html",
+      "document": "blog",
       "content": "content/hello/hello.json",
       "protected": false
     },
     {
       "route": "/world",
       "template": "foundation",
-      "page": "product-page.html",
+      "document": "product-page",
       "content": "content/hello/hello.json",
       "protected": false
     },
     {
       "route": "/version",
       "template": "version",
-      "page": "",
+      "interpreter": "html",
+      "document": "",
       "content": "../package.json",
       "protected": false
+    },
+    {
+      "route": "/build/public",
+      "static": true
     },
     {
       "route": "/vendor",
@@ -36,15 +43,7 @@
       "static": true
     },
     {
-      "route": "/assets",
-      "static": true
-    },
-    {
-      "route": "/templates",
-      "static": true
-    },
-    {
-      "content": "/assets/img/favicon.ico",
+      "content": "/build/public/img/favicon.ico",
       "favicon": true
     }
 ]

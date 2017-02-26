@@ -6,5 +6,9 @@
     {
         "script": "<script src='./editor.js'></script>",
         "location": "bodyEnd"
+    },
+    {
+        "script": "<!-- PURE Unobtrusive Rendering Engine --><script src='../../vendor/pure/pure.js'></script><script> $( 'body' ).render(window.page.content, window.page.directive); </script>",
+        "location": "bodyEnd"
     }
 ]

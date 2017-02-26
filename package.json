@@ -25,6 +25,7 @@
     "passport": "^0.3.2",
     "passport-google-oauth-jwt": "^0.2.2",
     "path": "^0.12.7",
+    "require-from-string": "^1.2.1",
     "serve-favicon": "^2.3.2"
   },
   "devDependencies": {},
@@ -35,12 +36,13 @@
     "LICENSE",
     "History.md",
     "README.md",
-    "quasi.js",
     "index.js",
-    "assets",
-    "config",
+    "quasi",
+    "middleware",
+    "configuration",
     "content",
-    "templates",
+    "bin",
+    "build",
     "vendor"
   ],
   "license": "Unlicense"
