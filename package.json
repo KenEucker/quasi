@@ -28,7 +28,16 @@
     "require-from-string": "^1.2.1",
     "serve-favicon": "^2.3.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-csso": "^2.0.0",
+    "gulp-json-transform": "^0.4.2",
+    "gulp-less": "^3.3.0",
+    "gulp-pug": "^3.2.0",
+    "gulp-react": "^3.1.0",
+    "gulp-rename": "^1.2.2",
+    "through2": "^2.0.3"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },

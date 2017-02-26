@@ -46,7 +46,7 @@ function insertBefore(what, where, insert) {
 
 // Inserts a string into another string after the single occurance where
 function insertAfter(what, where, insert, complication) {
-    var location = location + what.substring(what.indexOf(where)).indexOf(complication) + 1,
+    var location = what.indexOf(where) + what.substring(what.indexOf(where)).indexOf(complication) + 1,
         firstHalf = what.substring(0, location),
         secondHalf = what.substring(location + 1);
 
