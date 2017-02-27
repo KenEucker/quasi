@@ -45,7 +45,8 @@ The QUASI framework uses three configuration files for it's simple setup:
 # Start it up
 1. install nodejs
 2. run `npm install`
-3. run `node index.js`
+3. run `bin\build` to create the output of the app
+4. run `bin\start` to run the app
 
 # Development
 The bin folder is your home for QUASI development.
@@ -104,4 +105,3 @@ There is a build process for copying the static assets to the ouput folder and t
 * remoteStorage integration
 * Google Chrome extension
 * express generator starter project (CLI?)
-
