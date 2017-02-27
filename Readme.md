@@ -105,4 +105,3 @@ There is a build process for copying the static assets to the ouput folder and t
 * remoteStorage integration
 * Google Chrome extension
 * express generator starter project (CLI?)
-
