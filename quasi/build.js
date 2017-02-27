@@ -135,4 +135,4 @@ gulp.task('copy-assets', function() {
 });
 
 // Copying assets first so that the vendor code can be overwritten as well as the other assets
-gulp.task('default', [ 'copy-assets']);//, 'transpile-code' ]);
+gulp.task('default', [ 'copy-assets', 'transpile-code' ]);
