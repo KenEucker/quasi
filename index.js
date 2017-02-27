@@ -1,4 +1,5 @@
-var quasi = require('./quasi');
+var quasi = require('./quasi'),
+    configuration = require("./bin/configuration");
 
-quasi.configure();
+quasi.configure(configuration);
 quasi.run(8080);

@@ -189,6 +189,13 @@ function initialize(configuration)
     config = configuration;
     routeKeys = _.map(configuration.routes, 'route');
 
+    // Use the first route as the landing for the site
+    router.get("", function(req, res) {
+        let redirect = routeKeys[0] + '/';
+        logger.logUpdate('[' + req.url + '] root requested, redirecting to landing page at route: ' + redirect);
+        res.redirect(redirect);
+    });
+
     // Configure routes
     _.forEach(configuration.routes, function(route) {
         var type = "dynamic";
@@ -196,13 +203,9 @@ function initialize(configuration)
         // If the route is static
         if(route.static === true) {
             /// TODO: should static routes be protectable?
-            // Honestly I cannot figure this out
-            // Use static middleware without defined route
-            router.use(express.static(path.join(__dirname, outputFolder, route.route)));
-            // Define route and use sendFile on the requested path
-            router.use(route.route, function(req, res) {
-                serveFile(route.route, req, res);
-            });   
+            // Honestly I cannot figure this out <-- DID I FIGURE IT OUT?
+            // Use static middleware without defined route 
+            router.use(express.static(path.join(__dirname, outputFolder, '..', route.route)));
             type = "static";
         }
         // If this is a special route of type favicon
@@ -237,18 +240,9 @@ function initialize(configuration)
         logger.logInfo("Configured " + type + " route: " + route.route);
     });
 
-    // Set default route to the first site as well
     router.get('*', function(req, res) {
         let redirect = routeKeys[0] + '/';
-        logger.logUpdate('[' + req.url + '] route fallthrough, redirecting to landing page at route: ' + redirect);        
-        res.redirect(redirect);
-    });
-
-    // Use the first route as the landing for the site
-    router.get("", function(req, res) {
-        let redirect = routeKeys[0] + '/';
-        res.write("play");
-        logger.logUpdate('[' + req.url + '] root requested, redirecting to landing page at route: ' + redirect);
+        logger.logUpdate('[' + req.url + '] route fallthrough, redirecting to landing page at route: ' + redirect);
         res.redirect(redirect);
     });
 

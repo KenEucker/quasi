@@ -1,4 +1,0 @@
-#!/bin/bash 
-
-echo "Building QUASI app"
-gulp --gulpfile quasi/import.js

@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     logger = require('../middleware/logger/'),
     path = require('path'),
     inputFolder = path.join(__dirname + '/../', 'bin/'),
-    outputFolder = path.join(__dirname + '/../', 'build/');
+    outputFolder = path.join(__dirname + '/../', 'build/public/');
 
 // Inserts a string into another string before the single occurance where
 function insertBefore(what, where, insert) {
@@ -74,7 +74,7 @@ gulp.task('transpile-html', function() {
         }))
         /// TODO: add .pipe(inject()) here
         //.pipe(inject())
-        .pipe(gulp.dest(outputFolder + '/public/'))
+        .pipe(gulp.dest(outputFolder))
 });
 
 gulp.task('transpile-javascript', function() {
@@ -97,7 +97,7 @@ gulp.task('transpile-javascript', function() {
           path.basename = filename;
           path.extname = ".js"
         }))
-        .pipe(gulp.dest(outputFolder + 'public/'))
+        .pipe(gulp.dest(outputFolder))
 });
 
 gulp.task('transpile-css', function() {
@@ -119,10 +119,18 @@ gulp.task('transpile-css', function() {
           path.basename = filename;
           path.extname = ".css"
         }))
-        .pipe(gulp.dest(outputFolder + 'public/'))
+        .pipe(gulp.dest(outputFolder))
 });
 
 /// TODO: THIS IS OUR APP PIPELINE, put this flow into the build process of QUASI
-gulp.task('code', [ 'transpile-html', 'transpile-javascript', 'transpile-css' ]);
+gulp.task('transpile-code', [ 'transpile-css', 'transpile-html', 'transpile-javascript' ]);
 
-gulp.task('default', [ 'code' ]);
+gulp.task('copy-assets', function() { 
+    gulp.src(inputFolder + '/assets/**/*')
+        .pipe(gulp.dest(outputFolder + 'assets/', { overwrite: false }));
+    gulp.src(inputFolder + '/vendor/**/*')
+        .pipe(gulp.dest(outputFolder + 'vendor/', { overwrite: false }));
+});
+
+// Copying assets first so that the vendor code can be overwritten as well as the other assets
+gulp.task('default', [ 'copy-assets', 'transpile-code' ]);

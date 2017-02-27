@@ -17,8 +17,8 @@ var /* * Libraries * */
     _ = require('lodash'),
     
     /* * Application Data * */
-    configuration = require("../configuration"),
-    routeKeys = _.map(configuration.routes, 'route'),
+    configuration = null, //require("../configuration"),
+    routeKeys = null,//_.map(configuration.routes, 'route'),
 
     /* * Application Middleware * */
     authentication = require('./authentication'),
@@ -27,10 +27,19 @@ var /* * Libraries * */
     /* * Main application * */
     app = express();
 
-function configureQuasiApp() {
-
+function configureQuasiApp(_configuration) {
+    let startupMessage = 'Configuring QUASI App';
+    
+    if(!_configuration) {
+        logger.logError('No configuration, cannot create QUASI app without configuration');
+        return;
+    }
+    
+    configuration = _configuration;
+    routeKeys = _.map(configuration.routes, 'route'),
+    
     /********** Set up application and routes **********/
-    logger.logSuccess('Configuring QUASI App');
+    logger.logSuccess(startupMessage);
 
     // Turn on pretty formatted errors
     app.locals.pretty = true;

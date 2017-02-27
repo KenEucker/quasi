@@ -7,8 +7,8 @@ var gulp = require('gulp'),
     rename = require("gulp-rename"),
     logger = require('../middleware/logger/'),
     path = require('path'),
-    importFoler = path.join(__dirname + '/../', 'bin/import/'),
-    outputFolder = path.join(__dirname + '/../', 'bin/code/'),
+    importFoler = path.join(__dirname + '/../', 'import/'),
+    outputFolder = path.join(__dirname + '/../', 'bin/'),
     vfs = require('vinyl-fs'),
     change = require('gulp-change'),
     jeditor = require("gulp-json-editor"),
@@ -65,7 +65,7 @@ gulp.task('assemble-html', function() {
           path.extname = ".json"
           path.dirname = "";
         }))
-        .pipe(vfs.dest(outputFolder + 'html/', { overwrite: false }))
+        .pipe(vfs.dest(outputFolder + 'code/html/', { overwrite: false }))
 });
 
 gulp.task('assemble-javascript', function() {
@@ -104,7 +104,7 @@ gulp.task('assemble-javascript', function() {
           path.extname = ".json"
           path.dirname = "";
         }))
-        .pipe(vfs.dest(outputFolder + 'javascript/', { overwrite: false }))
+        .pipe(vfs.dest(outputFolder + 'code/javascript/', { overwrite: false }))
 });
 
 gulp.task('assemble-vendor-javascript', function() {
@@ -137,7 +137,7 @@ gulp.task('assemble-vendor-javascript', function() {
           path.extname = ".json"
           path.dirname = "";
         }))
-        .pipe(vfs.dest(outputFolder + 'javascript/', { overwrite: false }))
+        .pipe(vfs.dest(outputFolder + 'code/javascript/', { overwrite: false }))
 });
 
 gulp.task('assemble-vendor-css', function() {
@@ -170,7 +170,7 @@ gulp.task('assemble-vendor-css', function() {
           path.extname = ".json"
           path.dirname = "";
         }))
-        .pipe(vfs.dest(outputFolder + 'css/', { overwrite: false }))
+        .pipe(vfs.dest(outputFolder + 'code/css/', { overwrite: false }))
 });
 
 gulp.task('assemble-css', function() {
@@ -203,10 +203,16 @@ gulp.task('assemble-css', function() {
           path.extname = ".json"
           path.dirname = "";
         }))
-        .pipe(vfs.dest(outputFolder + 'css/', { overwrite: false }))
+        .pipe(vfs.dest(outputFolder + 'code/css/', { overwrite: false }))
 });
 
 gulp.task('assemble-vendor', [ 'assemble-vendor-javascript', 'assemble-vendor-css' ]);
-gulp.task('import', [ 'assemble-html', 'assemble-javascript', 'assemble-css', 'assemble-vendor' ]);
 
-gulp.task('default', [ 'import' ]);
+gulp.task('import-code', [ 'assemble-html', 'assemble-javascript', 'assemble-css', 'assemble-vendor' ]);
+
+gulp.task('import-assets', function() {
+    gulp.src(importFoler + '/assets/**/*')
+        .pipe(gulp.dest(outputFolder + 'assets/', { overwrite: false }));    
+});
+
+gulp.task('default', [ 'import-code', 'import-assets' ]);
