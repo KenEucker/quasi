@@ -125,11 +125,4 @@ gulp.task('transpile-css', function() {
 /// TODO: THIS IS OUR APP PIPELINE, put this flow into the build process of QUASI
 gulp.task('code', [ 'transpile-html', 'transpile-javascript', 'transpile-css' ]);
 
-// gulp.task('css', function(){
-//   return gulp.src('client/templates/*.less')
-//     .pipe(less())
-//     .pipe(minifyCSS())
-//     .pipe(gulp.dest('build/css'))
-// });
-
 gulp.task('default', [ 'code' ]);

@@ -7,34 +7,12 @@ var gulp = require('gulp'),
     rename = require("gulp-rename"),
     logger = require('../middleware/logger/'),
     path = require('path'),
-    inputFolder = path.join(__dirname + '/../', 'bin/'),
-    outputFolder = path.join(__dirname + '/../', 'build/');
-
-// Inserts a string into another string before the single occurance where
-function insertBefore(what, where, insert) {
-    var split = what.split(where);
-    
-    return split[0] + insert + where + split[1];
-}
-
-// Inserts a string into another string after the single occurance where
-function insertAfter(what, where, insert, complication) {
-    var location = (what.indexOf(where) + 1) + (what.substring(what.indexOf(where)).indexOf(complication) + 1),
-        firstHalf = what.substring(0, location),
-        secondHalf = what.substring(location + 1);
-
-    return firstHalf + insert + secondHalf;
-}
-
-function addInjectionPlaceholdersForHtmlPage(html) {
-
-    html = insertAfter(html, "<head", "<!-- inject:headStart --><!-- endinject -->", '>');
-    html = insertBefore(html, "</head>", "<!-- inject:headEnd --><!-- endinject -->");
-    html = insertAfter(html, "<body", "<!-- inject:bodyStart --><!-- endinject -->", '>');
-    html = insertBefore(html, "</body>", "<!-- inject:bodyEnd --><!-- endinject -->");
-
-    return html;  
-}
+    importFoler = path.join(__dirname + '/../', 'bin/import/'),
+    outputFolder = path.join(__dirname + '/../', 'bin/code/'),
+    vfs = require('vinyl-fs'),
+    change = require('gulp-change'),
+    jeditor = require("gulp-json-editor"),
+    jsonTransform = require('gulp-json-transform');
 
 // How to gulp from string taken from; http://stackoverflow.com/questions/23230569/how-do-you-create-a-file-from-a-string-in-gulp
 function string_src(filename, string) {
@@ -51,85 +29,184 @@ function string_src(filename, string) {
   return src
 }
 
-gulp.task('transpile-html', function() {
-  gulp.src(inputFolder + 'code/html/*.json')
-        .pipe(jsonTransform(function(data, file) {
-          /// Consider changing the way that html is piped using this information and calling .pipe(change()) initially for the code
-            let htmlFile = data.code, 
-                directiveCode = " <script>window.page = {}; window.page.directive = " + JSON.stringify(data.directive) + ";</script>";
-
-            htmlFile = insertBefore(htmlFile, "</body>", directiveCode);
-            htmlFile = addInjectionPlaceholdersForHtmlPage(htmlFile);
-            
-            return htmlFile;
+gulp.task('assemble-html', function() {
+    vfs.src(importFoler + 'views/**/*.html')
+        .pipe(change(function(content){
+            return JSON.stringify({code: content});
         }))
-        .pipe(rename(function (path) {
-          let split = path.basename.split('.'),
-              newPath = split.slice(0, split.length - 1).join('/'), 
-              filename = split[split.length - 1];
+        // .pipe(jsonTransform(function(data, file) {
+        //     console.log("data");
+        //     return { code: data };
+        // }))
+        .pipe(jeditor(function(json) {
+            json.name = "idontknow";
+            json.interpreter = "html";
+            json.extension = "html";
+            json.scripts = {
+                "headStart" : [ "<link rel='stylesheet' href='index.css'>" ],
+                "headEnd" : [],
+                "bodyStart" : [],
+                "bodyEnd" : []
+            };
 
-          path.dirname = newPath;
-          path.basename = filename;
-          path.extname = ".html"
-        }))
-        /// TODO: add .pipe(inject()) here
-        //.pipe(inject())
-        .pipe(gulp.dest(outputFolder + '/public/'))
-});
-
-gulp.task('transpile-javascript', function() {
-  gulp.src(inputFolder + 'code/javascript/*.json')
-        .pipe(jsonTransform(function(data, file) {            
-            return data.code;
+            return json;
         }))
         .pipe(rename(function (path) {
             // Temporarily converting '..' so that we can have a '.' in a directory or filename
-          let basePath = path.basename.replace(/\.\./g, "#"),
-              split = basePath.split('.'),
-              newPath = split.slice(0, split.length - 1).join('/'),
+          let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
+              split = basePath.split('/'),
+              newPath = split.slice(0, split.length - 1).join('.'),
               filename = split[split.length - 1];
 
-          newPath = newPath.replace(/#/g, "."); 
-          filename = filename.replace(/#/g, "."); 
-
-
-          path.dirname = newPath;
-          path.basename = filename;
-          path.extname = ".js"
+          newPath = newPath.replace(/#/g, ".."); 
+          filename = filename.replace(/#/g, ".."); 
+          
+          path.basename = "views." + newPath + "." + filename;
+          path.extname = ".json"
+          path.dirname = "";
         }))
-        .pipe(gulp.dest(outputFolder + 'public/'))
+        .pipe(vfs.dest(outputFolder + 'html/', { overwrite: false }))
 });
 
-gulp.task('transpile-css', function() {
-  gulp.src(inputFolder + 'code/css/*.json')
-        .pipe(jsonTransform(function(data, file) {            
-            return data.code;
+gulp.task('assemble-javascript', function() {
+    vfs.src(importFoler + 'views/**/*.js')
+        .pipe(change(function(content){
+            return JSON.stringify({code: content});
+        }))
+        // .pipe(jsonTransform(function(data, file) {
+        //     console.log("data");
+        //     return { code: data };
+        // }))
+        .pipe(jeditor(function(json) {
+            json.name = "idontknow";
+            json.interpreter = "html";
+            json.extension = "html";
+            json.scripts = {
+                "headStart" : [ "<link rel='stylesheet' href='index.css'>" ],
+                "headEnd" : [],
+                "bodyStart" : [],
+                "bodyEnd" : []
+            };
+
+            return json;
         }))
         .pipe(rename(function (path) {
             // Temporarily converting '..' so that we can have a '.' in a directory or filename
-          let basePath = path.basename.replace(/\.\./g, "#"),
-              split = basePath.split('.'),
-              newPath = split.slice(0, split.length - 1).join('/'),
+          let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
+              split = basePath.split('/'),
+              newPath = split.slice(0, split.length - 1).join('.'),
               filename = split[split.length - 1];
 
-          newPath = newPath.replace(/#/g, "."); 
-          filename = filename.replace(/#/g, "."); 
-
-          path.dirname = newPath;
-          path.basename = filename;
-          path.extname = ".css"
+          newPath = newPath.replace(/#/g, ".."); 
+          filename = filename.replace(/#/g, ".."); 
+          
+          path.basename = "views." + newPath + "." + filename;
+          path.extname = ".json"
+          path.dirname = "";
         }))
-        .pipe(gulp.dest(outputFolder + 'public/'))
+        .pipe(vfs.dest(outputFolder + 'javascript/', { overwrite: false }))
 });
 
-/// TODO: THIS IS OUR APP PIPELINE, put this flow into the build process of QUASI
-gulp.task('code', [ 'transpile-html', 'transpile-javascript', 'transpile-css' ]);
+gulp.task('assemble-vendor-javascript', function() {
+    vfs.src(importFoler + 'vendor/**/*.js')
+        .pipe(change(function(content){
+            return JSON.stringify({code: content});
+        }))
+        .pipe(jeditor(function(json) {
+            json.name = "idontknow";
+            json.interpreter = "javascript";
+            json.extension = "js";
 
-// gulp.task('css', function(){
-//   return gulp.src('client/templates/*.less')
-//     .pipe(less())
-//     .pipe(minifyCSS())
-//     .pipe(gulp.dest('build/css'))
-// });
+            return json;
+        }))
+        // .pipe(jsonTransform(function(data, file) {
+        //     console.log("data");
+        //     return { code: data };
+        // }))
+        .pipe(rename(function (path) {
+            // Temporarily converting '..' so that we can have a '.' in a directory or filename
+          let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
+              split = basePath.split('/'),
+              newPath = split.slice(0, split.length - 1).join('.'),
+              filename = split[split.length - 1];
 
-gulp.task('default', [ 'code' ]);
+          newPath = newPath.replace(/#/g, ".."); 
+          filename = filename.replace(/#/g, ".."); 
+          
+          path.basename = "vendor." + newPath + "." + filename;
+          path.extname = ".json"
+          path.dirname = "";
+        }))
+        .pipe(vfs.dest(outputFolder + 'javascript/', { overwrite: false }))
+});
+
+gulp.task('assemble-vendor-css', function() {
+    vfs.src(importFoler + 'vendor/**/*.css')
+        .pipe(change(function(content){
+            return JSON.stringify({code: content});
+        }))
+        .pipe(jeditor(function(json) {
+            json.name = "idontknow";
+            json.interpreter = "css";
+            json.extension = "css";
+
+            return json;
+        }))
+        // .pipe(jsonTransform(function(data, file) {
+        //     console.log("data");
+        //     return { code: data };
+        // }))
+        .pipe(rename(function (path) {
+            // Temporarily converting '..' so that we can have a '.' in a directory or filename
+          let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
+              split = basePath.split('/'),
+              newPath = split.slice(0, split.length - 1).join('.'),
+              filename = split[split.length - 1];
+
+          newPath = newPath.replace(/#/g, ".."); 
+          filename = filename.replace(/#/g, ".."); 
+          
+          path.basename = "vendor." + newPath + "." + filename;
+          path.extname = ".json"
+          path.dirname = "";
+        }))
+        .pipe(vfs.dest(outputFolder + 'css/', { overwrite: false }))
+});
+
+gulp.task('assemble-css', function() {
+    vfs.src(importFoler + 'views/**/*.css')
+        .pipe(change(function(content){
+            return JSON.stringify({code: content});
+        }))
+        // .pipe(jsonTransform(function(data, file) {
+        //     console.log("data");
+        //     return { code: data };
+        // }))
+        .pipe(jeditor(function(json) {
+            json.name = "idontknow";
+            json.interpreter = "css";
+            json.extension = "css";
+
+            return json;
+        }))
+        .pipe(rename(function (path) {
+            // Temporarily converting '..' so that we can have a '.' in a directory or filename
+          let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
+              split = basePath.split('/'),
+              newPath = split.slice(0, split.length - 1).join('.'),
+              filename = split[split.length - 1];
+
+          newPath = newPath.replace(/#/g, ".."); 
+          filename = filename.replace(/#/g, ".."); 
+          
+          path.basename = "views." + newPath + "." + filename;
+          path.extname = ".json"
+          path.dirname = "";
+        }))
+        .pipe(vfs.dest(outputFolder + 'css/', { overwrite: false }))
+});
+
+gulp.task('assemble-vendor', [ 'assemble-vendor-javascript', 'assemble-vendor-css' ]);
+gulp.task('import', [ 'assemble-html', 'assemble-javascript', 'assemble-css', 'assemble-vendor' ]);
+
+gulp.task('default', [ 'import' ]);
