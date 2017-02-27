@@ -15,3 +15,10 @@
 
   * More refactor of codebase to fit express scaffolding
   * Split the structure of the app between; the bin folder, which holds the static data, schemas, and content, and the build folder which contains the output of the build and an index to run the app.
+
+0.2.0  / 2017-02-26
+==================
+
+  * Final refactor of codebase to fit express scaffolding
+  * Everything that is user editable is now in the bin folder, the entire output of the app is in the build folder
+  * implemented a gulp build process with transpilers and assemblers for html, css, and javascript (the html using purejs on build output)
