@@ -48,8 +48,27 @@ The QUASI framework uses three configuration files for it's simple setup:
 3. run `node index.js`
 
 # Development
-Themes can be developed statically, as the paths are translated between served and unserved content.
-The flow for developing a theme is to add a few items, including the templating, to get started.
+The bin folder is your home for QUASI development.
+
+A QUASI app has the following JSON model structure:
+~~~~ 
+    code
+    configuration
+    content
+~~~~ 
+These folders contain json files that are used in configruation, build, and at runtime of the app.
+
+A QUASI app also has the following static asset structure:
+~~~~ 
+    assets
+    vendor
+    views
+~~~~ 
+These folders are copied to the build output before the code is transpiled.
+
+Themes can be developed statically, in the /bin/views/ folder as the paths are identical between served and unserved content.
+
+The flow for developing a theme is to add a few items of html|javascript|css only, including the templating, to get started.
 
 The vendor folder is for global libraries that can be modified from their original source or node_module middleware (minified versions are expected to be original source)
 
@@ -60,12 +79,19 @@ The idea is that you can develop a theme without any of the server tech running 
 * Static assets that are only used for a specific template may remain in that template's folder. Templates using static assets only specific to that template are expected to use a relative path specific to that template's folder structure.
 * Assets that are specific to site content would go into the /assets folder to be used between different templates. These assets are expected to use a path that goes the required levels out of the /templates folder (../../assets)
 
+# Importing existing webpages
+There is an import folder in the root of the project that you can drop existing web content into, currently only html|javascript|css, that is used with PUREJS and a directive to be transpiled into a json object file and used for the build output. Running `bin/import` will pull in all files in the folders `import/assets` and `import/views` and place them appropriately into the `bin/` folders to be developed on within QUASI.
+
+# Build
+There is a build process for copying the static assets to the ouput folder and then creating each of the files from the code folder into the output folder. Files that exist in code will overwrite files from the static assets. Run `bin/build` on the project to create the folder `build/public` to be served by the app.
+
 # Vendors that make this project possible
 * purejs (w/jquery)
 * express
 * passport
 * foundation
 * nodemailer
+* gulp
 
 # Roadmap
 ## 1.0.0
@@ -74,6 +100,7 @@ The idea is that you can develop a theme without any of the server tech running 
 * route generation and script loading
 * everything's a json object (EJO) Editor
 * webpack integration
+* React core components
 * remoteStorage integration
 * Google Chrome extension
 * express generator starter project (CLI?)
