@@ -81,7 +81,7 @@ function modifyPage(html, window_page_content) {
     html = html.replace('<script src="./sample.js"></script>', '');
 
     // Insert the page content to be used for PUREjs
-    html = insertBefore(html, '</body>', '<script>window.page.content=' + window_page_content + '; $(document).foundation();</script>');
+    html = insertBefore(html, '</body>', '<script> window.page.content=' + window_page_content + '; </script>');
 
     html = insertAfter(html, "<head", headStartScripts, '>');
     html = insertBefore(html, "</head>", headEndScripts);
