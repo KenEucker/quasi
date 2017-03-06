@@ -4,11 +4,15 @@
         "location": "headStart"
     },
     {
-        "script": "<script src='../../vendor/quasi-editor/quasi-editor.js'></script>",
+        "script": "<link rel='stylesheet' href='../../vendor/medium-editor/css/medium-editor.css'><link rel='stylesheet' href='../../vendor/medium-editor/css/themes/default.css'>",
+        "location": "headStart"        
+    },
+    {
+        "script": "<script src='../../vendor/medium-editor/js/medium-editor.js'></script><script src='../../vendor/cssman/main.js'></script><script src='../../vendor/quasi-editor/quasi-editor.js'></script>",
         "location": "bodyEnd"
     },
     {
-        "script": "<!-- PURE Unobtrusive Rendering Engine --><script src='../../vendor/pure/pure.js'></script><script> try { $( 'body' ).render(window.page.content, window.page.directive); }catch(e){ console.log(e); }</script>",
+        "script": "<!-- PURE Unobtrusive Rendering Engine --><script src='../../vendor/pure/pure.js'></script><script> setTimeout(function(){ try { $( 'body' ).render(window.page.content, window.page.directive); }catch(e){ console.log(e); } }, 0); </script>",
         "location": "bodyEnd"
     }
 ]

@@ -19,8 +19,15 @@ function insertBefore(what, where, insert) {
 
 // Inserts a string into another string after the single occurance where
 function insertAfter(what, where, insert, complication) {
-    var location = (what.indexOf(where) + 1) + (what.substring(what.indexOf(where)).indexOf(complication) + 1),
-        firstHalf = what.substring(0, location),
+    var location = (what.indexOf(where) + 1);
+
+    if(complication) {
+        for(var i = location; what[i] != complication; ++i) {
+            location += 1;
+        }
+    }
+
+    var firstHalf = what.substring(0, location + 1),
         secondHalf = what.substring(location + 1);
 
     return firstHalf + insert + secondHalf;
@@ -28,10 +35,23 @@ function insertAfter(what, where, insert, complication) {
 
 function addInjectionPlaceholdersForHtmlPage(html) {
 
-    html = insertAfter(html, "<head", "<!-- inject:headStart --><!-- endinject -->", '>');
-    html = insertBefore(html, "</head>", "<!-- inject:headEnd --><!-- endinject -->");
-    html = insertAfter(html, "<body", "<!-- inject:bodyStart --><!-- endinject -->", '>');
-    html = insertBefore(html, "</body>", "<!-- inject:bodyEnd --><!-- endinject -->");
+    var headStartInject = "<!-- inject:headStart --> <!-- endinject -->",
+        headEndInject = "<!-- inject:headEnd --> <!-- endinject -->",
+        bodyStartInject = "<!-- inject:bodyStart --> <!-- endinject -->",
+        bodyEndInject = "<!-- inject:bodyEnd --> <!-- endinject -->";
+
+    if(html.indexOf(headStartInject) == -1) {
+        html = insertAfter(html, "<head", headStartInject, ">");
+    }
+    if(html.indexOf(headEndInject) == -1) {
+        html = insertBefore(html, "</head>", headEndInject);
+    }
+    if(html.indexOf(bodyStartInject) == -1) {
+        html = insertAfter(html, "<body", bodyStartInject, ">");
+    }
+    if(html.indexOf(bodyEndInject) == -1) {
+        html = insertBefore(html, "</body>", bodyEndInject);
+    }
 
     return html;  
 }

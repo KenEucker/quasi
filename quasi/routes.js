@@ -46,8 +46,15 @@ function insertBefore(what, where, insert) {
 
 // Inserts a string into another string after the single occurance where
 function insertAfter(what, where, insert, complication) {
-    var location = what.indexOf(where) + what.substring(what.indexOf(where)).indexOf(complication) + 1,
-        firstHalf = what.substring(0, location),
+    var location = (what.indexOf(where) + 1);
+
+    if(complication) {
+        for(var i = location; what[i] != complication; ++i) {
+            location += 1;
+        }
+    }
+
+    var firstHalf = what.substring(0, location + 1),
         secondHalf = what.substring(location + 1);
 
     return firstHalf + insert + secondHalf;
@@ -87,7 +94,7 @@ function modifyPage(html, window_page_content) {
     html = insertBefore(html, "</head>", headEndScripts);
     html = insertAfter(html, "<body", bodyStartScripts, '>');
     html = insertBefore(html, "</body>", bodyEndScripts);
-            
+    
     return html;
 }
 

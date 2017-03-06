@@ -12,7 +12,8 @@ var gulp = require('gulp'),
     vfs = require('vinyl-fs'),
     change = require('gulp-change'),
     jeditor = require("gulp-json-editor"),
-    jsonTransform = require('gulp-json-transform');
+    jsonTransform = require('gulp-json-transform'),
+    esprima = require('esprima');
 
 // How to gulp from string taken from; http://stackoverflow.com/questions/23230569/how-do-you-create-a-file-from-a-string-in-gulp
 function string_src(filename, string) {
@@ -34,10 +35,6 @@ gulp.task('assemble-html', function() {
         .pipe(change(function(content){
             return JSON.stringify({code: content});
         }))
-        // .pipe(jsonTransform(function(data, file) {
-        //     console.log("data");
-        //     return { code: data };
-        // }))
         .pipe(jeditor(function(json) {
             json.name = "idontknow";
             json.interpreter = "html";
@@ -119,10 +116,6 @@ gulp.task('assemble-vendor-javascript', function() {
 
             return json;
         }))
-        // .pipe(jsonTransform(function(data, file) {
-        //     console.log("data");
-        //     return { code: data };
-        // }))
         .pipe(rename(function (path) {
             // Temporarily converting '..' so that we can have a '.' in a directory or filename
           let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
@@ -152,10 +145,6 @@ gulp.task('assemble-vendor-css', function() {
 
             return json;
         }))
-        // .pipe(jsonTransform(function(data, file) {
-        //     console.log("data");
-        //     return { code: data };
-        // }))
         .pipe(rename(function (path) {
             // Temporarily converting '..' so that we can have a '.' in a directory or filename
           let basePath = (path.dirname + '/' + path.basename).replace(/\./g, "#"),
@@ -178,10 +167,6 @@ gulp.task('assemble-css', function() {
         .pipe(change(function(content){
             return JSON.stringify({code: content});
         }))
-        // .pipe(jsonTransform(function(data, file) {
-        //     console.log("data");
-        //     return { code: data };
-        // }))
         .pipe(jeditor(function(json) {
             json.name = "idontknow";
             json.interpreter = "css";

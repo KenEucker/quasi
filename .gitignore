@@ -41,3 +41,6 @@ import
 
 # Output folder
 build/public
+
+# Packaged folder
+packaged
