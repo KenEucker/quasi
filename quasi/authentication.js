@@ -5,10 +5,12 @@ var router = require('express').Router(),
     logger = ('../middleware/logger'),
     /// For authenticating Google account users
     GoogleOauthJWTStrategy = require('passport-google-oauth-jwt').GoogleOauthJWTStrategy,
+    /// For user authentication
+    passport = require('passport'),
     /// For authenticating QUASI users
     users = require('./users');
 
-function initialize(configuration, passport) {
+function initialize(configuration) {
     // Configure passport methods
     passport.serializeUser(function(user, done) {
         done(null, user);
@@ -17,6 +19,9 @@ function initialize(configuration, passport) {
     passport.deserializeUser(function(user, done) {
         done(null, user);
     });
+
+    router.use(passport.initialize());
+    router.use(passport.session());
 
     // Configure sessions for authentication 
     _.forEach(configuration.authentication, function(authentication) {

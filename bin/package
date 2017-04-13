@@ -1,0 +1,4 @@
+#!/bin/bash 
+
+echo "Packaging up build folder using rollup"
+gulp --gulpfile quasi/package.js

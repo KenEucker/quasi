@@ -3,26 +3,21 @@
 var /* * Libraries * */
     /// Powers our app 
     express = require('express'),
-    /// For receiving and processing post data
-    bodyparser = require('body-parser'),
     /// To output log messages
     logger = require('../middleware/logger/'),
     /// To send emails using nodemailer
     nodemailer = require('../middleware/nodemailer/'),
-    /// For user authentication
-    passport = require('passport'),
-    /// Simple session middleware for express
-    session = require('express-session'),
     /// For collection utilities
     _ = require('lodash'),
     
     /* * Application Data * */
-    configuration = null, //require("../configuration"),
-    routeKeys = null,//_.map(configuration.routes, 'route'),
+    configuration = null,
+    routeKeys = null,
 
     /* * Application Middleware * */
     authentication = require('./authentication'),
     routes = require('./routes'),
+    store = require('./store'),
 
     /* * Main application * */
     app = express();
@@ -44,10 +39,8 @@ function configureQuasiApp(_configuration) {
     // Turn on pretty formatted errors
     app.locals.pretty = true;
 
-    app.use(authentication.initialize(configuration, passport));
-    app.use(bodyparser.json());
-    app.use(passport.initialize());
-    app.use(passport.session());
+    app.use(authentication.initialize(configuration));
+    app.use(store.initialize(configuration));
     app.use(routes.initialize(configuration));
 
     /********** Custom code **********/    
@@ -61,10 +54,9 @@ function configureQuasiApp(_configuration) {
 }
 
 function run(port) {
-    if(process.env.PORT) {
-        port = process.env.PORT;
-    }
-    else if(!port) {
+    port = process.env.PORT || port;
+    
+    if(false == port) {
         port = 8080;
     }
 

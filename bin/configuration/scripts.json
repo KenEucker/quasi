@@ -4,7 +4,7 @@
         "location": "headStart"
     },
     {
-        "script": "<link rel='stylesheet' href='../../vendor/medium-editor/css/medium-editor.css'><link rel='stylesheet' href='../../vendor/medium-editor/css/themes/default.css'>",
+        "script": "<link rel='stylesheet' href='../../vendor/medium-editor/css/medium-editor.css'><link rel='stylesheet' href='../../vendor/medium-editor/css/themes/default.css'><link rel='stylesheet' href='../../vendor/quasi-editor/quasi-editor.css'>",
         "location": "headStart"        
     },
     {

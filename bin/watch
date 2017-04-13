@@ -1,0 +1,5 @@
+#!/bin/bash 
+
+echo "Watching build/public/ for changes and syncing with QUASI"
+
+#livereload 'build/public'

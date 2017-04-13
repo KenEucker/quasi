@@ -1,0 +1,4 @@
+#!/bin/bash 
+
+echo "Testing QUASI app"
+echo "Error: no test specified" && exit 1

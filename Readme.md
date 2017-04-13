@@ -97,8 +97,11 @@ There is a build process for copying the static assets to the ouput folder and t
 # Roadmap
 ## 1.0.0
 ### Features 
+* Import existing html/js/css app
+* Build out to html/js/css app
+* Single Page App packaging
 * common OAUTH2 integrations using javascript web tokens
-* route generation and script loading
+* route generation with view/script loading
 * everything's a json object (EJO) Editor
 * webpack integration
 * React core components

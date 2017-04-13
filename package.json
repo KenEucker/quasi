@@ -5,7 +5,14 @@
   "author": "Ken Eucker <keneucker@gmail.com>",
   "contributors": [],
   "bin": {},
-  "scripts": {},
+  "scripts": {
+    "build": "bin/build",
+    "dev": "bin/dev",
+    "watch": "bin/watch",
+    "test": "bin/test",
+    "package": "bin/package",
+    "deploy": "bin/deploy"
+  },
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -39,6 +46,7 @@
     "gulp-react": "^3.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-util": "^3.0.8",
+    "npm-run-all": "^4.0.2",
     "through2": "^2.0.3",
     "vinyl-fs": "^2.4.4"
   },
