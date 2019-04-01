@@ -86,6 +86,16 @@ There is an import folder in the root of the project that you can drop existing 
 # Build
 There is a build process for copying the static assets to the ouput folder and then creating each of the files from the code folder into the output folder. Files that exist in code will overwrite files from the static assets. Run `bin/build` on the project to create the folder `build/public` to be served by the app.
 
+# Philosophy
+Websites should be configurable, scalable, replicable, sharable, updatable, and testable. These things mean different, but separate, solutions for different people - but those differences between developers shouldn't hold hostage the stack and course of development in order to deliver new web applications. Data layer interactions, state management, api interactivity, and the setup and teardown of features shouldn't be handled by the features themselves; this is a given.
+
+To think that server technology support and external service connections required should dictate the end user experience, both from a UI perspective and an interopability standpoint, is limiting. As long as you know what features you want, you should be enabled to mix and match them as well as turn them on or off without needing to change source code. With the advent of entire website management tools like wordpress and squarespace, we can do a lot more to support the interopability of website features and service integrations by isolating these features from one another or from reaching across an entire application.
+
+The management of individual website core features and their settings have long been developer controlled through configurations and modifications to source code, to which users have very little insight to or control over unless a detailed and constantly changing admin tool is provided. Even when these admin tools are created, they often require constant maintenance and have far too great an effect on the longevity of an application. There must be a way to separate business rules and service integration settings from the process of adding or removing common website features.
+
+Quasi is much like wordpress or squarespace in that it allows you to manage features and themes for your website and gives you an interface for changing the settings for these features in an admin tool. However, what Quasi does differently is that it does not provide an implicit way to edit content for a website or the individual data that these features may use. Quasi has no storage dependencies beyond the source code that is imported to the site for feaures, allowing website management users to connect external database resources to their core features through a settings interface that is less convoluted with menu after menu.
+
+
 # Vendors that make this project possible
 * purejs (w/jquery)
 * express
